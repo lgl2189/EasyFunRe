@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>ef-common</module>
+        <module>ef-gateway</module>
     </modules>
     <properties>
         <java.version>21</java.version>
