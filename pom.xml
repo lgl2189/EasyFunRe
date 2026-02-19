@@ -2,17 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.star</groupId>
+    <groupId>com.star.easyfun</groupId>
     <artifactId>EasyFun</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>EasyFun</name>
     <packaging>pom</packaging>
     <modules>
+        <module>ef-common</module>
     </modules>
     <properties>
         <java.version>21</java.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Spring 生态版本 -->
         <spring-boot.version>3.4.13</spring-boot.version>
         <spring-cloud.version>2024.0.3</spring-cloud.version>
@@ -93,7 +95,7 @@
                     <configuration>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
-                        <encoding>UTF-8</encoding>
+                        <encoding>${project.build.sourceEncoding}</encoding>
                         <annotationProcessorPaths>
                             <path>
                                 <groupId>org.projectlombok</groupId>
