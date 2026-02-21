@@ -21,8 +21,6 @@
         <spring-boot.version>3.4.13</spring-boot.version>
         <spring-cloud.version>2024.0.3</spring-cloud.version>
         <spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
-        <!--        &lt;!&ndash; 数据库与存储 &ndash;&gt;-->
-        <!--        <mysql.version>8.0.33</mysql.version>-->
         <!--        &lt;!&ndash; 消息队列 &ndash;&gt;-->
         <!--        <rabbitmq.version>3.1.0</rabbitmq.version>-->
         <!--        &lt;!&ndash; JWT 认证 &ndash;&gt;-->
@@ -30,7 +28,6 @@
         <!-- 工具库 -->
         <lombok.version>1.18.30</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
-        <!--        <jackson.version>2.15.3</jackson.version>-->
         <!--        <commons-lang3.version>3.14.0</commons-lang3.version>-->
         <!--        <commons-collections4.version>4.4</commons-collections4.version>-->
         <!--        <commons-io.version>2.15.1</commons-io.version>-->
@@ -86,6 +83,14 @@
 
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.star.easyfun.common</groupId>
+            <artifactId>ef-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <pluginManagement>
