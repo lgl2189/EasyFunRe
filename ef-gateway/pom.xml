@@ -11,4 +11,20 @@
 
     <groupId>com.star.easyfun.gateway</groupId>
     <artifactId>ef-gateway</artifactId>
+
+    <build>
+        <plugins>
+            <!-- 仅声明插件，所有配置（包括注解处理器路径）都从父工程继承 -->
+            <!-- 版本、configuration 全部继承自父工程的pluginManagement -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
