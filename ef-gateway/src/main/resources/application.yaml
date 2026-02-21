@@ -1,0 +1,57 @@
+#服务器基础配置
+server:
+  # 网关端口，前端统一访问这个端口
+  port: 8080
+  servlet:
+    # 上下文路径
+    context-path: /
+spring:
+  application:
+    name: gateway-service # 网关服务名（注册到Nacos的名称）
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.150.105:8848 # Nacos地址
+        namespace: easyfun_dev
+        username: nacos
+        password: 12345678
+      config:
+        server-addr: 192.168.150.105:8848 # Nacos地址
+        namespace: easyfun_dev
+        file-extension: yaml
+        username: ${spring.cloud.nacos.discovery.username}
+        password: ${spring.cloud.nacos.discovery.password}
+    gateway:
+      routes:
+        # 路由1：转发到用户服务（动态路由，基于服务名）
+        - id: user-service-route # 路由唯一ID（自定义，唯一即可）
+          uri: lb://user-service # 目标服务地址：lb=负载均衡，后面跟注册中心的服务名
+          predicates: # 路由断言（匹配规则，满足则转发）
+            - Path=/user/** # 路径匹配：所有/user开头的请求转发到user-service
+            - Method=GET,POST # 限制请求方法（可选）
+          filters: # 路由过滤器（对请求/响应做处理）
+            - StripPrefix=1 # 去除路径前缀1级：/user/get → /get（转发到后端服务）
+      # 2.2 常用功能配置
+      globalcors:
+        cors-configurations:
+          '[/**]': # 对所有路径生效
+            allowed-origins: "*" # 允许所有源（生产环境建议指定具体域名）
+            allowed-methods: "*" # 允许所有请求方法
+            allowed-headers: "*" # 允许所有请求头
+            allow-credentials: true # 允许携带cookie
+            max-age: 3600 # 预检请求缓存时间（秒）
+      httpclient:
+        connect-timeout: 3000 # 连接超时时间（毫秒）
+        response-timeout: 5000 # 响应超时时间（毫秒）
+  config:
+    import:
+      # 格式：nacos:服务名-环境名.yml?server-addr=Nacos地址
+      # 严格模式：Nacos上必须存在ef-gateway-dev.yml配置，否则启动失败
+#      - nacos:ef-gateway-dev.yml?server-addr=${spring.cloud.nacos.config.server-addr}
+      # 可选模式（推荐新手）：配置不存在也不报错，启动不受影响
+      - optional:nacos:ef-gateway-dev.yaml?server-addr=${spring.cloud.nacos.config.server-addr}
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.netty: DEBUG
