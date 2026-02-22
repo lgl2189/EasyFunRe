@@ -11,6 +11,7 @@
         <module>ef-common</module>
         <module>ef-gateway</module>
         <module>ef-user</module>
+        <module>ef-authorization</module>
     </modules>
     <properties>
         <java.version>21</java.version>
