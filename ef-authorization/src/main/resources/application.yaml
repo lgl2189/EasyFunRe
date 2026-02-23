@@ -1,0 +1,35 @@
+#服务器基础配置
+server:
+  # 网关端口，前端统一访问这个端口
+  port: 8081
+  servlet:
+    # 上下文路径
+    context-path: /
+spring:
+  application:
+    name: authorization-service # 网关服务名
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.150.105:8848 # Nacos地址
+        namespace: easyfun_dev
+        username: nacos
+        password: 12345678
+      config:
+        server-addr: 192.168.150.105:8848 # Nacos地址
+        namespace: easyfun_dev
+        file-extension: yaml
+        username: ${spring.cloud.nacos.discovery.username}
+        password: ${spring.cloud.nacos.discovery.password}
+  config:
+    import:
+      # 格式：nacos:服务名-环境名.yml?server-addr=Nacos地址
+      # 严格模式：Nacos上必须存在ef-gateway-dev.yml配置，否则启动失败
+#      - nacos:ef-gateway-dev.yml?server-addr=${spring.cloud.nacos.config.server-addr}
+      # 可选模式（推荐新手）：配置不存在也不报错，启动不受影响
+      - optional:nacos:ef-authorization-dev.yaml?server-addr=${spring.cloud.nacos.config.server-addr}
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.netty: DEBUG
