@@ -8,19 +8,19 @@ package com.star.easyfun.common.constant;
 
 
 public class CommonRedisKey {
-    public static final String JWT_ACCESS_TOKEN = "jwt:access_token:blacklist";
+    public static final String JWT_BLACK_ACCESS_TOKEN = "jwt:access_token:blacklist";
     public static final String JWT_REFRESH_TOKEN = "jwt:refresh_token";
     public static final String DEVICE_ID = "device:id";
 
     /**
-     * 获取AccessToken的redis key
+     * 获取AccessToken黑名单的redis key
      *
      * @param userId   用户id
      * @param deviceId 设备
      * @return AccessToken的Redis key
      */
-    public static String getJwtAccessTokenKey(String userId, String deviceId) {
-        return JWT_ACCESS_TOKEN + ":" + userId + ":" + deviceId;
+    public static String getJwtBlackAccessTokenKey(String userId, String deviceId) {
+        return JWT_BLACK_ACCESS_TOKEN + ":" + userId + ":" + deviceId;
     }
 
     /**

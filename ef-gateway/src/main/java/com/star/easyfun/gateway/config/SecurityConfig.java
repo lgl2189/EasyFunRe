@@ -8,6 +8,7 @@ import com.star.easyfun.gateway.filter.AuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -32,13 +33,14 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
     private final JWTCommonService jwtCommonService;
     private final JWTHelper jwtHelper;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         // 选择手动创建对象，是因为如果将Filter作为SpringBean，Spring会自动将其加入Spring的过滤器链
         // 会导致过滤器同时存在于Spring的过滤器链和SpringSecurity的过滤器链，最终导致每个请求被处理两次
         // 目前没有找到方式在WebFlux中手动关闭一个过滤器的自动注册
-        final AuthFilter authFilter = new AuthFilter(objectMapper,jwtCommonService,jwtHelper);
+        final AuthFilter authFilter = new AuthFilter(objectMapper,jwtCommonService,jwtHelper,redisTemplate);
         http
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers(RequestUrlConstant.gatewaySecurityIgnoreUrlList).permitAll()

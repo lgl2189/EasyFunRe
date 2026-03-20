@@ -2,6 +2,7 @@ package com.star.easyfun.gateway.filter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.star.easyfun.common.constant.CommonRedisKey;
 import com.star.easyfun.common.constant.CommonRequestHeader;
 import com.star.easyfun.common.pojo.dto.Result;
 import com.star.easyfun.common.pojo.dto.TokenPayLoad;
@@ -14,6 +15,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -45,6 +48,7 @@ public class AuthFilter implements WebFilter {
     private final ObjectMapper objectMapper;
     private final JWTCommonService jwtCommonService;
     private final JWTHelper jwtHelper;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private final AntPathMatcher authPathMatcher = new AntPathMatcher();
     private static final Logger logger = LogManager.getLogger(AuthFilter.class);
@@ -57,7 +61,8 @@ public class AuthFilter implements WebFilter {
                 return chain.filter(exchange);
             }
         }
-        String authHeader = exchange.getRequest().getHeaders().getFirst(CommonRequestHeader.HEADER_AUTHORIZATION);
+        HttpHeaders headers = exchange.getRequest().getHeaders();
+        String authHeader = headers.getFirst(CommonRequestHeader.HEADER_AUTHORIZATION);
         if (authHeader == null) {
             return buildResponse(exchange, ResultUtil.fail_30001("未提供Token"));
         }
@@ -84,6 +89,12 @@ public class AuthFilter implements WebFilter {
         catch (JsonProcessingException e) {
             logger.error("ef-gateway中，jwt解析时出现JsonProcessingException错误，导致jwt解析失败", e);
             return buildResponse(exchange, ResultUtil.fail_30003("Token验证失败，Token已失效"));
+        }
+        // 检查该Token是否被黑名单记录
+        String deviceId = headers.getFirst(CommonRequestHeader.HEADER_DEVICE_ID);
+        String userId = tokenPayLoad.getUserId();
+        if(redisTemplate.hasKey(CommonRedisKey.getJwtBlackAccessTokenKey(userId,deviceId))){
+            return buildResponse(exchange, ResultUtil.fail_30003("该Token已登出或被封禁"));
         }
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 tokenPayLoad.getUserId(),

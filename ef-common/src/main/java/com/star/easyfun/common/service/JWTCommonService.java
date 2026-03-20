@@ -5,7 +5,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 public interface JWTCommonService {
 
     /**
-     * 验证 Token
+     * 验证 Token，只验证Token本身是否正确，不验证Token的权限、黑名单等
      *
      * @param token 要解析的token
      * @return 解析后的JWT

@@ -94,7 +94,7 @@ public class JWTCoreServiceImpl implements JWTCoreService {
         if (!redisTemplate.hasKey(jwtRefreshTokenKey)) {
             return false;
         }
-        String jwtAccessTokenKey = CommonRedisKey.getJwtAccessTokenKey(accessTokenPayLoad.getUserId(), deviceId);
+        String jwtAccessTokenKey = CommonRedisKey.getJwtBlackAccessTokenKey(accessTokenPayLoad.getUserId(), deviceId);
         Instant expiresAt = accessJwt.getExpiresAt();
         Duration duration = Duration.between(Instant.now(), expiresAt);
         long expirationSeconds = duration.getSeconds();
