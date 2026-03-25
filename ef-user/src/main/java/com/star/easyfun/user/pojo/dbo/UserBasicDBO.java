@@ -37,7 +37,7 @@ public class UserBasicDBO implements Serializable {
      */
     private String username;
     /**
-     * 用户密码（支持bcrypt/Argon2等安全算法，MD5仅作兼容）
+     * 用户密码（使用Bcrypt加密）
      */
     private String password;
     /**
