@@ -55,10 +55,16 @@ public class UserServiceImpl implements UserService {
         UserBasicDBO userBasicDBO = userStructMapper.fromUserAllInfoDTOToBasicDBO(userAllInfoDTO);
         UserProfileDBO userProfileDBO = userStructMapper.fromUserAllInfoDTOToProfileDBO(userAllInfoDTO);
         userBasicMapper.updateById(userBasicDBO);
-        LambdaQueryWrapper<UserProfileDBO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserProfileDBO::getUserId, userAllInfoDTO.getUserId());
-        int update = userProfileMapper.update(userProfileDBO, queryWrapper);
-        return update == 1;
+        boolean hasProfile = userProfileMapper.selectById(userAllInfoDTO.getUserId()) != null;
+        if(hasProfile){
+            LambdaQueryWrapper<UserProfileDBO> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(UserProfileDBO::getUserId, userAllInfoDTO.getUserId());
+            int update = userProfileMapper.update(userProfileDBO, queryWrapper);
+            return update == 1;
+        }
+        else{
+            return userProfileMapper.insert(userProfileDBO) == 1;
+        }
     }
 
     @Override
